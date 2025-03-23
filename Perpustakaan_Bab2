@@ -1,0 +1,147 @@
+import java.util.*;
+
+class Kategori {
+    String nama;
+    List<Buku> daftarBuku;
+    
+    Kategori(String nama) {
+        this.nama = nama;
+        this.daftarBuku = new ArrayList<>();
+    }
+    
+    void tambahBuku(Buku buku) {   
+        daftarBuku.add(buku);
+    }
+    
+    void printKategori() {
+        System.out.println("Kategori: " + nama);
+        System.out.println("-----------------------------------------------------------------------------------------------");
+        System.out.printf("%-25s %-10s %-20s %-10s %-10s %-10s\n", "Judul", "Tahun", "Penulis", "Harga", "Royalti 10%", "Royalti 15%");
+        System.out.println("-----------------------------------------------------------------------------------------------");
+        for (Buku buku : daftarBuku) {
+            System.out.printf("%-25s %-10d %-20s Rp %-8.2f Rp %-8.2f Rp %-8.2f\n", 
+                buku.judul, 
+                buku.tahunTerbit, 
+                String.join(", ", buku.penulis), 
+                buku.harga, 
+                buku.hitungRoyalti(), 
+                buku.hitungRoyalti(15)
+            );
+        }
+        System.out.println("-----------------------------------------------------------------------------------------------\n");
+    }
+}
+
+class Buku {
+    String judul;
+    int tahunTerbit;
+    List<String> penulis;
+    String sinopsis;
+    double harga;
+    
+    public Buku(String judul, int tahunTerbit, List<String> penulis, String sinopsis, double harga) {
+        this.judul = judul;
+        this.tahunTerbit = tahunTerbit;
+        this.penulis = penulis;
+        this.sinopsis = sinopsis;
+        this.harga = harga;
+    }
+    
+    public int hitungJumlahKataSinopsis() {
+        return sinopsis.trim().split("\\s+").length;
+    }
+    
+        public double cekTingkatKesamaan(Buku bukuLain) {
+        int kesamaan = 0;
+        int totalAtribut = 4;
+        
+        if (this.judul.equals(bukuLain.judul)) kesamaan++;
+        if (this.tahunTerbit == bukuLain.tahunTerbit) kesamaan++;
+        if (this.penulis.equals(bukuLain.penulis)) kesamaan++;
+        if (this.sinopsis.equals(bukuLain.sinopsis)) kesamaan++;
+        
+        return (kesamaan / (double) totalAtribut) * 100;
+    }
+    
+    public Buku copy() {
+        return new Buku(this.judul, this.tahunTerbit, new ArrayList<>(this.penulis), this.sinopsis, this.harga);
+    }
+    
+    // Metode untuk menghitung royalti 10%
+    public double hitungRoyalti() {
+        return harga * 0.1;
+    }
+    
+    // Metode untuk menghitung royalti dengan persentase khusus
+    public double hitungRoyalti(double persen) {
+        return harga * (persen / 100);
+    }
+}
+
+public class Perpustakaan_Bab2 {
+    public static void main(String[] args) {
+        List<Kategori> daftarKategori = new ArrayList<>();
+
+        Kategori teknologi = new Kategori("Teknologi");
+        teknologi.tambahBuku(new Buku("AI Basics", 2020, Arrays.asList("John Doe"), "Buku ini membahas dasar-dasar AI serta penerapannya dalam berbagai bidang industri modern yang berkembang pesat.", 55000));
+        teknologi.tambahBuku(new Buku("Data Science", 2019, Arrays.asList("Jane Smith"), "Buku ini menjelaskan konsep Data Science, termasuk teknik pengolahan data dan implementasi algoritma pembelajaran mesin.", 50000));
+        teknologi.tambahBuku(new Buku("Cyber Security", 2018, Arrays.asList("Alan Turing"), "Keamanan siber sangat penting di era digital karena ancaman terhadap privasi dan data semakin meningkat dengan teknologi.", 45000));
+        teknologi.tambahBuku(new Buku("Machine Learning", 2021, Arrays.asList("Andrew Ng"), "Panduan praktis tentang Machine Learning yang mencakup berbagai model prediktif dan strategi optimasi data dalam bisnis.", 40000));
+        teknologi.tambahBuku(new Buku("Big Data", 2022, Arrays.asList("Elon Musk"), "Bagaimana data besar mengubah dunia dengan analisis mendalam terhadap tren industri dan pengambilan keputusan berbasis AI.", 35000));
+        
+        
+        Kategori filsafat = new Kategori("Filsafat");
+        filsafat.tambahBuku(new Buku("The Republic", 380, Arrays.asList("Plato"), "Buku klasik yang membahas keadilan dan struktur ideal negara dalam pandangan filsafat.", 75000));
+        filsafat.tambahBuku(new Buku("Beyond Good and Evil", 1886, Arrays.asList("Nietzsche"), "Sebuah analisis mendalam tentang moralitas dan nilai-nilai dalam kehidupan manusia.", 70000));
+        filsafat.tambahBuku(new Buku("Meditations", 180, Arrays.asList("Marcus Aurelius"), "Kumpulan refleksi pribadi seorang kaisar Romawi tentang kebijaksanaan dan ketenangan batin.", 65000));
+        filsafat.tambahBuku(new Buku("Critique of Pure Reason", 1781, Arrays.asList("Immanuel Kant"), "Eksplorasi mendalam tentang berbagai batas-batas rasionalitas dan pengetahuan manusia.", 60000));
+        filsafat.tambahBuku(new Buku("The Myth of Sisyphus", 1942, Arrays.asList("Albert Camus"), "Filsafat absurdisme yang menggambarkan perjuangan manusia dalam menghadapi kehidupan yang ada.", 55000));
+        
+
+        Kategori sejarah = new Kategori("Sejarah");
+        sejarah.tambahBuku(new Buku("World War II", 1995, Arrays.asList("Winston Churchill"), "Pembahasan mendalam tentang Perang Dunia II dari perspektif sejarah dan politik.", 100000));
+        sejarah.tambahBuku(new Buku("French Revolution", 1905, Arrays.asList("Karl Marx"), "Analisis mendalam tentang Revolusi Prancis dan dampaknya pada dunia modern.", 95000));
+        sejarah.tambahBuku(new Buku("The Cold War", 1980, Arrays.asList("Henry Kissinger"), "Perjalanan tentang sejarah Perang Dingin antara Amerika dan Uni Soviet.", 90000));
+        sejarah.tambahBuku(new Buku("Ancient Civilizations", 2000, Arrays.asList("Yuval Harari"), "Buku ini membahas perkembangan peradaban kuno dan pengaruhnya pada dunia modern.", 85000));
+        sejarah.tambahBuku(new Buku("History of Rome", 1885, Arrays.asList("Edward Gibbon"), "Buku ini mengangkat kisah Sejarah Kekaisaran Romawi dari awal hingga kejatuhannya.", 80000));
+        
+
+        Kategori agama = new Kategori("Agama");
+        agama.tambahBuku(new Buku("Islamic History", 1999, Arrays.asList("Karen Armstrong"), "Sejarah perkembangan Islam mulai dari masa Nabi Muhammad saw hingga era modern.", 82000));
+        agama.tambahBuku(new Buku("Christian Theology", 2005, Arrays.asList("C.S. Lewis"), "Eksplorasi ajaran Kristen dan implikasinya dalam kehidupan sekarang atau modern.", 72000));
+        agama.tambahBuku(new Buku("Buddhism and Science", 2012, Arrays.asList("Dalai Lama"), "Buku ini membahas terkait hubungan antara ajaran Buddha dan perkembangan ilmu pengetahuan.", 62000));
+        agama.tambahBuku(new Buku("Religious Ethics", 2015, Arrays.asList("William Lane Craig"), "Diskusi terkait bagaimana etika agama dan moralitas seiring perubahan zaman.", 52000));
+        agama.tambahBuku(new Buku("Hinduism Explained", 2010, Arrays.asList("Radhanath Swami"), "Buku ini memberikan sebuah penjelasan tentang ajaran dan sejarah Hindu.", 42000));
+        
+
+        Kategori psikologi = new Kategori("Psikologi");
+        psikologi.tambahBuku(new Buku("The Ego and the Id", 1923, Arrays.asList("Sigmund Freud"), "Analisis mendalam tentang apa saja dan bagaimana struktur psikologis manusia.", 125000));
+        psikologi.tambahBuku(new Buku("Behavioral Psychology", 1975, Arrays.asList("B.F. Skinner"), "Dasar-dasar psikologi perilaku manusia dan eksperimen yang mendukung dibaliknya.", 120000));
+        psikologi.tambahBuku(new Buku("Dream Analysis", 1900, Arrays.asList("Carl Jung"), "Teori analisis bagaimana mimpi bisa terjadi dan simbolisme dalam alam bawah sadar.", 115000));
+        psikologi.tambahBuku(new Buku("Cognitive Science", 1990, Arrays.asList("Noam Chomsky"), "Eksplorasi ilmu kognitif dan hubungannya dengan bahasa di kehidupan sehari-hari.", 110000));
+        psikologi.tambahBuku(new Buku("Psychological Theories", 1985, Arrays.asList("Daniel Kahneman"), "Berbagai teori psikologi dan penerapannya dalam kehidupan sehari-hari sebagai gen Z.", 105000));
+        
+
+        Kategori politik = new Kategori("Politik");
+        politik.tambahBuku(new Buku("The Prince", 1532, Arrays.asList("Niccolò Machiavelli"), "Buku ini mendalami tentang strategi politik dan kekuasaan dalam pemerintahan.", 91000));
+        politik.tambahBuku(new Buku("Communist Manifesto", 1848, Arrays.asList("Karl Marx"), "Manifesto komunis yang mengubah sejarah dunia menjadi seperti sekarang ini.", 81000));
+        politik.tambahBuku(new Buku("Democracy in America", 1835, Arrays.asList("Alexis de Tocqueville"), "Analisis mendalam terkait demokrasi di Amerika Serikat beserta kolerasi terhadap kehidupan lingkungan sekitar.", 71000));
+        politik.tambahBuku(new Buku("Capitalism and Freedom", 1962, Arrays.asList("Milton Friedman"), "Hubungan antara kapitalisme dan kebebasan individu di kehidupan bermasyarakat era modern.", 61000));
+        politik.tambahBuku(new Buku("Political Order", 2011, Arrays.asList("Francis Fukuyama"), "Perkembangan tatanan politik dalam sejarah yang semakin lemah setiap tahunnnya.", 51000));
+
+        Kategori fiksi = new Kategori("Fiksi");
+        fiksi.tambahBuku(new Buku("Distopia World", 1949, Arrays.asList("George Orwell"), "Dunia distopia yang penuh dengan pengawasan dan manipulasi politik.", 55000));
+        fiksi.tambahBuku(new Buku("Brave New World", 1932, Arrays.asList("Aldous Huxley"), "Visi masa depan yang dikendalikan oleh teknologi dan rekayasa sosial.", 44000));
+        fiksi.tambahBuku(new Buku("Harry Potter", 1997, Arrays.asList("J.K. Rowling"), "Kisah petualangan seorang penyihir muda dalam dunia sihir yang penuh tantangan dan keajaiban.", 33000));
+        fiksi.tambahBuku(new Buku("The Hobbit", 1937, Arrays.asList("J.R.R. Tolkien"), "Petualangan epik seorang hobbit dalam dunia fantasi yang penuh dengan makhluk mitologi dan keajaiban.", 22000));
+        fiksi.tambahBuku(new Buku("Dune", 1965, Arrays.asList("Frank Herbert"), "Perjuangan kekuasaan, politik, dan ekologi di planet gurun Arrakis yang diperebutkan oleh banyak pihak.", 11000));
+
+        teknologi.printKategori();
+        filsafat.printKategori();
+        sejarah.printKategori();
+        agama.printKategori();
+        psikologi.printKategori();
+        politik.printKategori();
+        fiksi.printKategori();
+    }
+}
