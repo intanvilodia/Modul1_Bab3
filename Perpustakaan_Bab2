@@ -1,44 +1,54 @@
 import java.util.*;
 
+// Kode program ini sama dengan Modul1_Bab2 hanya saja saya sesuaikan kembali sesuai perintah pada soal
+
+// Kelas untuk merepresentasikan kategori buku
 class Kategori {
     String nama;
     List<Buku> daftarBuku;
     
+    // Konstruktor untuk inisialisasi kategori
     Kategori(String nama) {
         this.nama = nama;
-        this.daftarBuku = new ArrayList<>();
+        this.daftarBuku = new ArrayList<>(); // Menggunakan ArrayList untuk menyimpan daftar buku
     }
     
+    // Metode untuk menambahkan buku ke dalam kategori
     void tambahBuku(Buku buku) {   
-        daftarBuku.add(buku);
+        daftarBuku.add(buku); // Menambahkan objek buku ke dalam daftar kategori
     }
     
+    // Metode untuk mencetak daftar buku dalam kategori dengan format tabel supaya lebih rapi
+    // Tabel dipisahkan per kategori buku
     void printKategori() {
         System.out.println("Kategori: " + nama);
         System.out.println("-----------------------------------------------------------------------------------------------");
         System.out.printf("%-25s %-10s %-20s %-10s %-10s %-10s\n", "Judul", "Tahun", "Penulis", "Harga", "Royalti 10%", "Royalti 15%");
         System.out.println("-----------------------------------------------------------------------------------------------");
         for (Buku buku : daftarBuku) {
+            // Menampilkan informasi buku dalam bentuk tabel
             System.out.printf("%-25s %-10d %-20s Rp %-8.2f Rp %-8.2f Rp %-8.2f\n", 
                 buku.judul, 
                 buku.tahunTerbit, 
                 String.join(", ", buku.penulis), 
                 buku.harga, 
-                buku.hitungRoyalti(), 
-                buku.hitungRoyalti(15)
+                buku.hitungRoyalti(buku.harga), 
+                buku.hitungRoyalti(buku.harga, 15)
             );
         }
         System.out.println("-----------------------------------------------------------------------------------------------\n");
     }
 }
 
+// Kelas untuk merepresentasikan buku
 class Buku {
     String judul;
     int tahunTerbit;
     List<String> penulis;
     String sinopsis;
-    double harga;
+    double harga; // Saya tambahkan double harga untuk menyimpan harga setiap buku // Menggunakan double agar memiliki desimal di bagian belakangnya (contoh: 55000,00)
     
+    // Konstruktor untuk inisialisasi buku dengan informasi lengkap
     public Buku(String judul, int tahunTerbit, List<String> penulis, String sinopsis, double harga) {
         this.judul = judul;
         this.tahunTerbit = tahunTerbit;
@@ -47,40 +57,50 @@ class Buku {
         this.harga = harga;
     }
     
+    // Metode untuk menghitung jumlah kata dalam sinopsis
     public int hitungJumlahKataSinopsis() {
-        return sinopsis.trim().split("\\s+").length;
+        return sinopsis.trim().split("\\s+").length; // Memisahkan kata berdasarkan spasi dan menghitung jumlahnya
     }
     
+        // Metode untuk membandingkan kesamaan antara dua buku berdasarkan atributnya
         public double cekTingkatKesamaan(Buku bukuLain) {
         int kesamaan = 0;
-        int totalAtribut = 4;
+        int totalAtribut = 4; // Jumlah atribut yang dibandingkan
         
+        // Mengecek kesamaan berdasarkan judul, tahun terbit, penulis, dan sinopsis
         if (this.judul.equals(bukuLain.judul)) kesamaan++;
         if (this.tahunTerbit == bukuLain.tahunTerbit) kesamaan++;
         if (this.penulis.equals(bukuLain.penulis)) kesamaan++;
         if (this.sinopsis.equals(bukuLain.sinopsis)) kesamaan++;
         
-        return (kesamaan / (double) totalAtribut) * 100;
+        return (kesamaan / (double) totalAtribut) * 100; // Mengembalikan presentase kesamaan
     }
     
+    // Metode untuk menyalin objek buku
     public Buku copy() {
         return new Buku(this.judul, this.tahunTerbit, new ArrayList<>(this.penulis), this.sinopsis, this.harga);
     }
     
-    // Metode untuk menghitung royalti 10%
-    public double hitungRoyalti() {
-        return harga * 0.1;
+    // Metode untuk menghitung royalti 10% dari harga buku
+    // hitungRoyalti dengan 1 parameter
+    public double hitungRoyalti(double hargaBuku) {
+        return harga * 0.1; // Menghitung 10% dari harga buku masing-masing
     }
     
-    // Metode untuk menghitung royalti dengan persentase khusus
-    public double hitungRoyalti(double persen) {
+    // Metode untuk menghitung royalti dengan persentase yang diberikan
+    // hitungRoyalti dengan 2 parameter
+    public double hitungRoyalti(double hargaBuku, double persen) {  
         return harga * (persen / 100);
     }
 }
 
+// Kelas utama untuk menjalankan program
 public class Perpustakaan_Bab2 {
     public static void main(String[] args) {
         List<Kategori> daftarKategori = new ArrayList<>();
+
+        // Saya memasukkan daftar harga yang berbeda di setiap bukunya, meskipun dalam kategori yang sama
+        // Tujuannya agar terlihat variasi royalti yang dihitung
 
         Kategori teknologi = new Kategori("Teknologi");
         teknologi.tambahBuku(new Buku("AI Basics", 2020, Arrays.asList("John Doe"), "Buku ini membahas dasar-dasar AI serta penerapannya dalam berbagai bidang industri modern yang berkembang pesat.", 55000));
@@ -136,6 +156,7 @@ public class Perpustakaan_Bab2 {
         fiksi.tambahBuku(new Buku("The Hobbit", 1937, Arrays.asList("J.R.R. Tolkien"), "Petualangan epik seorang hobbit dalam dunia fantasi yang penuh dengan makhluk mitologi dan keajaiban.", 22000));
         fiksi.tambahBuku(new Buku("Dune", 1965, Arrays.asList("Frank Herbert"), "Perjuangan kekuasaan, politik, dan ekologi di planet gurun Arrakis yang diperebutkan oleh banyak pihak.", 11000));
 
+        // Menampilkan daftar buku berdasarkan kategorinya
         teknologi.printKategori();
         filsafat.printKategori();
         sejarah.printKategori();
